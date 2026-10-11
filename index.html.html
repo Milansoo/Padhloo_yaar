@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padhlo Yaar - By Khushbu  Mandal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            600: '#243b53',
+                            700: '#102a43',
+                            accent: '#3b82f6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Navbar Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Institute Brand -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xl shadow-sm">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold text-slate-900 tracking-tight block leading-tight">Padhlo Yaar </span>
+                        <span class="text-xs text-slate-500 font-medium">- By Khushbu  Mandal</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden md:flex items-center space-x-1 sm:space-x-2">
+                    <button id="nav-home" onclick="switchTab('home')" class="nav-btn px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-150 text-brand-600 bg-brand-50">
+                        <i class="fa-solid fa-house mr-1.5"></i> Home
+                    </button>
+                    <button id="nav-lectures" onclick="switchTab('lectures')" class="nav-btn px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition-all duration-150">
+                        <i class="fa-solid fa-video mr-1.5"></i> Video Lectures
+                    </button>
+                    <button id="nav-notes" onclick="switchTab('notes')" class="nav-btn px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition-all duration-150">
+                        <i class="fa-solid fa-file-pdf mr-1.5"></i> Study Notes
+                    </button>
+
+                    <div class="h-5 w-[1px] bg-slate-200 mx-2"></div>
+
+                    <!-- Admin Access / Logout Dynamic Button -->
+                    <button id="nav-admin-btn" onclick="handleAdminNavClick()" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-150 flex items-center">
+                        <!-- Dynamic Auth Content -->
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2 text-slate-600 hover:text-slate-900 rounded-lg focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('home')" class="w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium text-sm flex items-center">
+                <i class="fa-solid fa-house w-6 text-brand-600"></i> Home
+            </button>
+            <button onclick="switchTab('lectures')" class="w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium text-sm flex items-center">
+                <i class="fa-solid fa-video w-6 text-brand-600"></i> Video Lectures
+            </button>
+            <button onclick="switchTab('notes')" class="w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium text-sm flex items-center">
+                <i class="fa-solid fa-file-pdf w-6 text-brand-600"></i> Study Notes
+            </button>
+            <div class="pt-2 border-t border-slate-100">
+                <button id="mobile-admin-btn" onclick="handleAdminNavClick()" class="w-full text-left px-3 py-2 rounded-md font-medium text-sm flex items-center">
+                    <!-- Dynamic Auth Content -->
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ==================== TAB 1: HOME VIEW ==================== -->
+        <section id="view-home" class="space-y-8">
+            <!-- Simple Banner -->
+            <div class="bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 rounded-2xl p-8 sm:p-12 text-white shadow-md relative overflow-hidden">
+                <div class="max-w-2xl relative z-10">
+                    <span class="inline-block px-3 py-1 bg-white/20 text-white rounded-full text-xs font-semibold tracking-wider uppercase mb-4">Student Learning Portal</span>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">Welcome to Padhlo Yaar
+
+</h1>
+                    <p class="text-slate-100 text-base sm:text-lg mb-6 leading-relaxed">Access video lectures and download subject-wise revision notes smoothly in one place.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchTab('lectures')" class="bg-white text-brand-700 hover:bg-slate-100 font-semibold px-5 py-2.5 rounded-lg text-sm transition shadow-sm inline-flex items-center">
+                            <i class="fa-solid fa-circle-play mr-2 text-brand-600"></i> Watch Lectures
+                        </button>
+                        <button onclick="switchTab('notes')" class="bg-brand-700/50 hover:bg-brand-700 border border-white/20 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition inline-flex items-center">
+                            <i class="fa-solid fa-download mr-2"></i> Download Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-center">
+                    <p id="stat-videos-count" class="text-2xl sm:text-3xl font-bold text-brand-600">0</p>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">Video Lectures</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-center">
+                    <p id="stat-notes-count" class="text-2xl sm:text-3xl font-bold text-brand-600">0</p>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">PDF Notes & Files</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-center">
+                    <p id="stat-subjects-count" class="text-2xl sm:text-3xl font-bold text-brand-600">0</p>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">Subjects Covered</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-center">
+                    <p class="text-2xl sm:text-3xl font-bold text-emerald-600"><i class="fa-solid fa-check-circle"></i></p>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">Free Access</p>
+                </div>
+            </div>
+
+            <!-- Recent Lectures Preview -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-slate-900">Recent Lectures</h2>
+                    <button onclick="switchTab('lectures')" class="text-sm font-semibold text-brand-600 hover:text-brand-700">View All →</button>
+                </div>
+                <div id="home-videos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Recent Notes Preview -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-slate-900">Recent Study Material</h2>
+                    <button onclick="switchTab('notes')" class="text-sm font-semibold text-brand-600 hover:text-brand-700">View All →</button>
+                </div>
+                <div id="home-notes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: VIDEO LECTURES VIEW ==================== -->
+        <section id="view-lectures" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 pb-5">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Video Lectures</h1>
+                    <p class="text-sm text-slate-500 mt-1">Watch YouTube lecture recordings sorted by subject</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="lecture-search" oninput="renderLectures()" placeholder="Search video title..." class="w-full sm:w-64 pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <select id="lecture-subject-filter" onchange="renderLectures()" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
+                        <option value="ALL">All Subjects</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="lectures-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- ==================== TAB 3: STUDY NOTES VIEW ==================== -->
+        <section id="view-notes" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 pb-5">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Study Notes & PDFs</h1>
+                    <p class="text-sm text-slate-500 mt-1">Download chapter summaries, notes, and reference sheets</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="notes-search" oninput="renderNotes()" placeholder="Search notes..." class="w-full sm:w-64 pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <select id="notes-subject-filter" onchange="renderNotes()" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
+                        <option value="ALL">All Subjects</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ==================== TAB 4: ADMIN UPLOAD & MANAGEMENT VIEW ==================== -->
+        <section id="view-admin" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="border-b border-slate-200 pb-4 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900" id="admin-panel-heading">Admin Management Panel</h1>
+                    <p class="text-sm text-slate-500 mt-1">Upload, update, or remove YouTube lectures and study notes</p>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-300 transition flex items-center">
+                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Logout
+                </button>
+            </div>
+
+            <!-- Sub Navigation Tabs for Form -->
+            <div class="bg-slate-200 p-1 rounded-xl flex space-x-1">
+                <button id="admin-subtab-video" onclick="switchAdminTab('video')" class="w-1/2 py-2 text-sm font-semibold rounded-lg bg-white text-brand-600 shadow-sm transition">
+                    <i class="fa-solid fa-video mr-2"></i> Add Video Lecture
+                </button>
+                <button id="admin-subtab-note" onclick="switchAdminTab('note')" class="w-1/2 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+                    <i class="fa-solid fa-file-pdf mr-2"></i> Add Study Notes
+                </button>
+            </div>
+
+            <!-- Form Container -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                <!-- Video Upload / Edit Form -->
+                <form id="form-upload-video" onsubmit="handleVideoSubmit(event)" class="space-y-4">
+                    <input type="hidden" id="video-editing-id" value="">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Lecture Title *</label>
+                        <input type="text" id="video-title" required placeholder="e.g. Integration by Parts & Trigonometric Substitution" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Subject *</label>
+                            <input type="text" id="video-subject" required placeholder="e.g. Mathematics" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teacher / Author</label>
+                            <input type="text" id="video-author" placeholder="e.g. Prof. Sharma" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">YouTube Video Link / URL / ID *</label>
+                        <input type="text" id="video-url" required placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ or YouTube video ID" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <p class="text-xs text-slate-400 mt-1">Accepts standard YouTube links, embed links, or 11-character video IDs.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Description (Optional)</label>
+                        <textarea id="video-desc" rows="3" placeholder="Brief details about topics covered in this lecture..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" id="video-submit-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-lg text-sm transition shadow-sm">
+                            <i class="fa-solid fa-plus-circle mr-2"></i> Publish Lecture
+                        </button>
+                        <button type="button" id="video-cancel-btn" onclick="resetVideoForm()" class="hidden px-5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 rounded-lg text-sm transition">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Note Upload / Edit Form -->
+                <form id="form-upload-note" onsubmit="handleNoteSubmit(event)" class="space-y-4 hidden">
+                    <input type="hidden" id="note-editing-id" value="">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Document Title *</label>
+                        <input type="text" id="note-title" required placeholder="e.g. Electrostatics Formula Sheet & Practice Set" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Subject *</label>
+                            <input type="text" id="note-subject" required placeholder="e.g. Physics" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Format Type</label>
+                            <select id="note-format" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
+                                <option value="PDF">PDF Document</option>
+                                <option value="DOC">Word Document (DOCX)</option>
+                                <option value="ZIP">ZIP Archive</option>
+                                <option value="LINK">Drive/Cloud Link</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Document File URL / Drive Link *</label>
+                        <input type="text" id="note-url" required placeholder="https://example.com/notes.pdf or Google Drive link" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <p class="text-xs text-slate-400 mt-1">Direct downloadable PDF link or shared cloud storage link.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Note Summary (Optional)</label>
+                        <textarea id="note-desc" rows="3" placeholder="Topics covered in this notes sheet..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" id="note-submit-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-lg text-sm transition shadow-sm">
+                            <i class="fa-solid fa-file-arrow-up mr-2"></i> Publish Study Note
+                        </button>
+                        <button type="button" id="note-cancel-btn" onclick="resetNoteForm()" class="hidden px-5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 rounded-lg text-sm transition">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Admin Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 text-xl font-bold leading-none">&times;</button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Admin Authentication</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter coaching admin credentials to gain access</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Username</label>
+                    <input type="text" id="login-username" required placeholder="admin" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div id="login-error-msg" class="hidden p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg flex items-center">
+                    <i class="fa-solid fa-circle-exclamation mr-2"></i> Invalid username or password.
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow-sm">
+                    Sign In to Admin
+                </button>
+            </form>
+
+            <!-- <div class="mt-4 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
+                Default Credentials: <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-700 font-semibold">admin / admin123</span>
+            </div> -->
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="video-modal" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl overflow-hidden max-w-4xl w-full shadow-2xl relative">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200">
+                <div class="truncate pr-4">
+                    <span id="modal-subject" class="text-xs font-bold px-2 py-0.5 bg-brand-50 text-brand-600 rounded">Subject</span>
+                    <h3 id="modal-title" class="font-bold text-slate-900 text-lg truncate mt-1">Video Title</h3>
+                </div>
+                <button onclick="closeVideoModal()" class="text-slate-400 hover:text-slate-700 p-1 text-2xl font-bold leading-none">&times;</button>
+            </div>
+            <div class="aspect-video w-full bg-black">
+                <iframe id="modal-iframe" class="w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="p-6 bg-slate-50 border-t border-slate-200">
+                <p id="modal-desc" class="text-sm text-slate-600">Video description goes here.</p>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeVideoModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-lg transition">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center text-sm text-slate-500"> <div class="mt-6 pt-5 border-t border-slate-200">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-sm text-slate-500">
+            <span class="font-semibold text-slate-700">Connect Us</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
+            <a href="https://www.instagram.com/khushbu_6445?psln=MWRqNTVxOTh5ZGZiag%3D%3D" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-pink-50 text-pink-600 hover:bg-pink-100 transition">
+                <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+
+            <a href="https://t.me/+GKTBRQ9lJRI5Njk1" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
+                <i class="fa-brands fa-telegram"></i> Telegram
+            </a>
+
+            <a href="https://www.youtube.com/@padhku_party" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition">
+                <i class="fa-brands fa-youtube"></i> YouTube
+            </a>
+
+            <!-- <a href="Khushbumandal83@gmail.com"
+               class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
+                <i class="fa-solid fa-envelope"></i> Email
+            </a> -->
+        </div>
+    </div>
+</div>
+            <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+
+                
+                <i class="fa-solid fa-graduation-cap text-brand-600"></i>
+                
+                
+                <span class="font-semibold text-slate-700">Padhlo Yaar
+</span>
+
+            </div>
+            <p>© <span id="current-year"></span> Padhlo Yaar
+. All study materials rights reserved.</p>
+        </div>
+       
+    </footer>
+
+    <script>
+        // Set year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Initial default mock data
+        const initialVideos = [
+            {
+                id: 'vid-1',
+                title: 'Calculus Part 1: Derivatives and Limits Explained',
+                subject: 'Mathematics',
+                author: 'Prof. R. Sharma',
+                youtubeId: 'dQw4w9WgXcQ',
+                desc: 'Essential lecture covering limits, derivatives and fundamental calculus rules.',
+                date: '2026-03-10'
+            },
+            {
+                id: 'vid-2',
+                title: 'Newton\'s Laws of Motion - Full Chapter Review',
+                subject: 'Physics',
+                author: 'Dr. V. Verma',
+                youtubeId: 'dQw4w9WgXcQ',
+                desc: 'Detailed discussion on Force, Momentum, and Friction with numerical practice.',
+                date: '2026-03-12'
+            },
+            {
+                id: 'vid-3',
+                title: 'Periodic Table & Chemical Bonding Quick Revision',
+                subject: 'Chemistry',
+                author: 'Ma\'am S. Gupta',
+                youtubeId: 'dQw4w9WgXcQ',
+                desc: 'Key periodic trends, electronegativity, and hybridization concepts.',
+                date: '2026-03-15'
+            }
+        ];
+
+        const initialNotes = [
+            {
+                id: 'note-1',
+                title: 'Class 12 Maths Formula Sheet & Important Theorems',
+                subject: 'Mathematics',
+                format: 'PDF',
+                url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                desc: 'Complete formula sheet for algebra, calculus, and vectors.',
+                date: '2026-03-11'
+            },
+            {
+                id: 'note-2',
+                title: 'Physics Mechanics - Mind Maps & Question Bank',
+                subject: 'Physics',
+                format: 'PDF',
+                url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                desc: 'Handwritten notes with top 50 solved numerical questions.',
+                date: '2026-03-14'
+            },
+            {
+                id: 'note-3',
+                title: 'Organic Chemistry Reactions Summary Chart',
+                subject: 'Chemistry',
+                format: 'PDF',
+                url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                desc: 'Reaction roadmap for name reactions and reagents.',
+                date: '2026-03-16'
+            }
+        ];
+
+        // State initialization
+        const MAX_VIDEOS = 500;
+        const MAX_NOTES = 500;
+
+        let videos = JSON.parse(localStorage.getItem('apex_videos')) || initialVideos;
+        let notes = JSON.parse(localStorage.getItem('apex_notes')) || initialNotes;
+        let isAdminLoggedIn = localStorage.getItem('apex_admin_auth') === 'true';
+
+        // Save Data Helper
+        function saveData() {
+            try {
+                localStorage.setItem('apex_videos', JSON.stringify(videos));
+                localStorage.setItem('apex_notes', JSON.stringify(notes));
+            } catch (error) {
+                showToast('Storage is full. Please delete some videos or notes first.', 'info');
+                return;
+            }
+            updateStats();
+            populateSubjectDropdowns();
+        }
+
+        // Auth Header Rendering
+        function updateAuthUI() {
+            const adminBtn = document.getElementById('nav-admin-btn');
+            const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+
+            if (isAdminLoggedIn) {
+                adminBtn.className = "px-3.5 py-2 text-sm font-semibold rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition";
+                adminBtn.innerHTML = `<i class="fa-solid fa-user-shield mr-1.5"></i> Admin Panel`;
+
+                mobileAdminBtn.className = "w-full text-left px-3 py-2 rounded-md font-medium text-sm text-emerald-700 bg-emerald-50 flex items-center";
+                mobileAdminBtn.innerHTML = `<i class="fa-solid fa-user-shield w-6"></i> Admin Panel (Logged In)`;
+            } else {
+                adminBtn.className = "px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition";
+                adminBtn.innerHTML = `<i class="fa-solid fa-lock mr-1.5"></i> Admin Login`;
+
+                mobileAdminBtn.className = "w-full text-left px-3 py-2 rounded-md font-medium text-sm text-slate-700 hover:bg-slate-100 flex items-center";
+                mobileAdminBtn.innerHTML = `<i class="fa-solid fa-lock w-6 text-brand-600"></i> Admin Login`;
+            }
+        }
+
+        // Navigation Action Handler
+        function handleAdminNavClick() {
+            if (isAdminLoggedIn) {
+                switchTab('admin');
+            } else {
+                openLoginModal();
+            }
+        }
+
+        // Navigation Tab Switcher
+        function switchTab(tabId) {
+            if (tabId === 'admin' && !isAdminLoggedIn) {
+                openLoginModal();
+                return;
+            }
+
+            const tabs = ['home', 'lectures', 'notes', 'admin'];
+            tabs.forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) {
+                    btn.classList.remove('bg-brand-50', 'text-brand-600');
+                    btn.classList.add('text-slate-600');
+                }
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand-50', 'text-brand-600');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            if (tabId === 'home') renderHome();
+            if (tabId === 'lectures') renderLectures();
+            if (tabId === 'notes') renderNotes();
+        }
+
+        // Toggle mobile navigation
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Admin Subtab Switcher
+        function switchAdminTab(type) {
+            const videoForm = document.getElementById('form-upload-video');
+            const noteForm = document.getElementById('form-upload-note');
+            const videoBtn = document.getElementById('admin-subtab-video');
+            const noteBtn = document.getElementById('admin-subtab-note');
+
+            if (type === 'video') {
+                videoForm.classList.remove('hidden');
+                noteForm.classList.add('hidden');
+                videoBtn.className = "w-1/2 py-2 text-sm font-semibold rounded-lg bg-white text-brand-600 shadow-sm transition";
+                noteBtn.className = "w-1/2 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition";
+            } else {
+                noteForm.classList.remove('hidden');
+                videoForm.classList.add('hidden');
+                noteBtn.className = "w-1/2 py-2 text-sm font-semibold rounded-lg bg-white text-brand-600 shadow-sm transition";
+                videoBtn.className = "w-1/2 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition";
+            }
+        }
+
+        // Admin Login Modal Handlers
+        function openLoginModal() {
+            document.getElementById('login-error-msg').classList.add('hidden');
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+
+            if (user === 'Khushbu83' && pass === 'Mandal') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('apex_admin_auth', 'true');
+                updateAuthUI();
+                closeLoginModal();
+                showToast('Welcome Admin! You now have full upload privileges.', 'success');
+                switchTab('admin');
+                renderLectures();
+                renderNotes();
+            } else {
+                document.getElementById('login-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            localStorage.setItem('apex_admin_auth', 'false');
+            updateAuthUI();
+            showToast('Logged out of Admin Mode.', 'info');
+            switchTab('home');
+            renderLectures();
+            renderNotes();
+        }
+
+        // YouTube ID Extractor
+        function parseYouTubeId(input) {
+            if (!input) return 'dQw4w9WgXcQ';
+
+            const trimmed = input.trim();
+
+            // Already a valid YouTube video ID
+            if (/^[A-Za-z0-9_-]{11}$/.test(trimmed)) {
+                return trimmed;
+            }
+
+            try {
+                const url = new URL(trimmed);
+                const host = url.hostname.replace(/^www\./, '');
+
+                if (host === 'youtu.be' || host === 'youtube.com' || host === 'm.youtube.com') {
+                    const paramsId = url.searchParams.get('v');
+                    if (paramsId && /^[A-Za-z0-9_-]{11}$/.test(paramsId)) return paramsId;
+
+                    const pathParts = url.pathname.split('/').filter(Boolean);
+                    const pathId = pathParts.find(part => /^[A-Za-z0-9_-]{11}$/.test(part));
+                    if (pathId) return pathId;
+                }
+            } catch (error) {
+                // fallback below for non-standard strings
+            }
+
+            const match = trimmed.match(/[A-Za-z0-9_-]{11}/);
+            return match ? match[0] : 'dQw4w9WgXcQ';
+        }
+
+        // Render Home View
+        function renderHome() {
+            updateStats();
+            
+            const recentVids = [...videos].reverse().slice(0, 3);
+            const homeVidsContainer = document.getElementById('home-videos-grid');
+            homeVidsContainer.innerHTML = recentVids.length === 0
+                ? `<p class="col-span-3 text-slate-500 text-sm italic">No video lectures uploaded yet.</p>`
+                : recentVids.map(v => createVideoCardHTML(v)).join('');
+
+            const recentNotes = [...notes].reverse().slice(0, 3);
+            const homeNotesContainer = document.getElementById('home-notes-grid');
+            homeNotesContainer.innerHTML = recentNotes.length === 0
+                ? `<p class="col-span-3 text-slate-500 text-sm italic">No study notes uploaded yet.</p>`
+                : recentNotes.map(n => createNoteCardHTML(n)).join('');
+        }
+
+        // Render Lectures View
+        function renderLectures() {
+            const search = document.getElementById('lecture-search').value.toLowerCase();
+            const subject = document.getElementById('lecture-subject-filter').value;
+            const container = document.getElementById('lectures-grid');
+
+            const filtered = videos.filter(v => {
+                const matchesSearch = v.title.toLowerCase().includes(search) || (v.desc && v.desc.toLowerCase().includes(search));
+                const matchesSubject = subject === 'ALL' || v.subject === subject;
+                return matchesSearch && matchesSubject;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-video-slash text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-slate-600 font-medium">No video lectures found.</p>
+                        <p class="text-xs text-slate-400 mt-1">Try resetting search filters or log in as Admin to upload.</p>
+                    </div>`;
+            } else {
+                container.innerHTML = filtered.slice().reverse().map(v => createVideoCardHTML(v)).join('');
+            }
+        }
+
+        // Render Notes View
+        function renderNotes() {
+            const search = document.getElementById('notes-search').value.toLowerCase();
+            const subject = document.getElementById('notes-subject-filter').value;
+            const container = document.getElementById('notes-grid');
+
+            const filtered = notes.filter(n => {
+                const matchesSearch = n.title.toLowerCase().includes(search) || (n.desc && n.desc.toLowerCase().includes(search));
+                const matchesSubject = subject === 'ALL' || n.subject === subject;
+                return matchesSearch && matchesSubject;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-slate-600 font-medium">No study notes found.</p>
+                        <p class="text-xs text-slate-400 mt-1">Try resetting search filters or log in as Admin to upload.</p>
+                    </div>`;
+            } else {
+                container.innerHTML = filtered.slice().reverse().map(n => createNoteCardHTML(n)).join('');
+            }
+        }
+
+        // HTML Video Card Component
+        function createVideoCardHTML(video) {
+            return `
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition">
+                    <div class="relative group cursor-pointer bg-slate-900 aspect-video" onclick="openVideoModal('${video.id}')">
+                        <img src="https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg" alt="${video.title}" class="w-full h-full object-cover group-hover:opacity-80 transition">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+                                <i class="fa-solid fa-play text-lg ml-0.5"></i>
+                            </div>
+                        </div>
+                        <span class="absolute top-3 left-3 bg-slate-900/80 text-white text-xs font-semibold px-2.5 py-1 rounded">
+                            ${video.subject}
+                        </span>
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-900 line-clamp-2 text-base hover:text-brand-600 cursor-pointer" onclick="openVideoModal('${video.id}')">
+                                ${video.title}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">${video.desc || 'No detailed description provided.'}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                            <span><i class="fa-regular fa-user mr-1"></i> ${video.author || 'Faculty Member'}</span>
+                            <div class="flex items-center space-x-2">
+                                ${isAdminLoggedIn ? `
+                                    <button onclick="editVideo('${video.id}')" title="Edit Lecture" class="text-slate-400 hover:text-brand-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteVideo('${video.id}')" title="Delete Lecture" class="text-slate-400 hover:text-red-600 p-1"><i class="fa-solid fa-trash"></i></button>
+                                ` : ''}
+                                <button onclick="openVideoModal('${video.id}')" class="font-semibold text-brand-600 hover:text-brand-700">Watch Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // HTML Note Card Component
+        function createNoteCardHTML(note) {
+            return `
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded">
+                                ${note.subject}
+                            </span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <i class="fa-solid fa-file-pdf text-red-500 mr-1"></i> ${note.format || 'PDF'}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base leading-snug">${note.title}</h3>
+                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">${note.desc || 'Click below to view or download full study material.'}</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs text-slate-400">${note.date || 'Recent'}</span>
+                        <div class="flex items-center space-x-2">
+                            ${isAdminLoggedIn ? `
+                                <button onclick="editNote('${note.id}')" title="Edit Note" class="text-slate-400 hover:text-brand-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteNote('${note.id}')" title="Delete Note" class="text-slate-400 hover:text-red-600 p-1 mr-1"><i class="fa-solid fa-trash"></i></button>
+                            ` : ''}
+                            <a href="${note.url}" target="_blank" rel="noopener noreferrer" onclick="copyToClipboardFallback('${note.url}')" class="inline-flex items-center px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-600 text-xs font-semibold rounded-lg transition">
+                                <i class="fa-solid fa-download mr-1.5"></i> Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal Player Control
+        function openVideoModal(id) {
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
+
+            document.getElementById('modal-title').textContent = video.title;
+            document.getElementById('modal-subject').textContent = video.subject;
+            document.getElementById('modal-desc').textContent = video.desc || 'No extra notes for this video.';
+            document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${video.youtubeId}?autoplay=1`;
+
+            document.getElementById('video-modal').classList.remove('hidden');
+        }
+
+        function closeVideoModal() {
+            document.getElementById('video-modal').classList.add('hidden');
+            document.getElementById('modal-iframe').src = '';
+        }
+
+        // Video Submit (Add or Edit)
+        function handleVideoSubmit(event) {
+            event.preventDefault();
+            if (!isAdminLoggedIn) return openLoginModal();
+
+            const editingId = document.getElementById('video-editing-id').value;
+            const title = document.getElementById('video-title').value.trim();
+            const subject = document.getElementById('video-subject').value.trim();
+            const author = document.getElementById('video-author').value.trim();
+            const rawUrl = document.getElementById('video-url').value.trim();
+            const desc = document.getElementById('video-desc').value.trim();
+
+            if (!editingId && videos.length >= MAX_VIDEOS) {
+                showToast(`Maximum ${MAX_VIDEOS} videos allowed. Delete some first.`, 'info');
+                return;
+            }
+
+            const youtubeId = parseYouTubeId(rawUrl);
+
+            if (editingId) {
+                // Edit existing video
+                const index = videos.findIndex(v => v.id === editingId);
+                if (index !== -1) {
+                    videos[index] = { ...videos[index], title, subject, author: author || 'Faculty Member', youtubeId, desc };
+                    showToast('Video lecture updated successfully!', 'success');
+                }
+            } else {
+                // Add new video
+                const newVideo = {
+                    id: 'vid-' + Date.now(),
+                    title,
+                    subject,
+                    author: author || 'Faculty Member',
+                    youtubeId,
+                    desc,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                videos.push(newVideo);
+                showToast('Video lecture published!', 'success');
+            }
+
+            saveData();
+            resetVideoForm();
+            switchTab('lectures');
+        }
+
+        function editVideo(id) {
+            if (!isAdminLoggedIn) return openLoginModal();
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
+
+            switchTab('admin');
+            switchAdminTab('video');
+
+            document.getElementById('video-editing-id').value = video.id;
+            document.getElementById('video-title').value = video.title;
+            document.getElementById('video-subject').value = video.subject;
+            document.getElementById('video-author').value = video.author;
+            document.getElementById('video-url').value = `https://www.youtube.com/watch?v=${video.youtubeId}`;
+            document.getElementById('video-desc').value = video.desc || '';
+
+            document.getElementById('video-submit-btn').innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Update Video Lecture`;
+            document.getElementById('video-cancel-btn').classList.remove('hidden');
+        }
+
+        function resetVideoForm() {
+            document.getElementById('form-upload-video').reset();
+            document.getElementById('video-editing-id').value = '';
+            document.getElementById('video-submit-btn').innerHTML = `<i class="fa-solid fa-plus-circle mr-2"></i> Publish Lecture`;
+            document.getElementById('video-cancel-btn').classList.add('hidden');
+        }
+
+        // Note Submit (Add or Edit)
+        function handleNoteSubmit(event) {
+            event.preventDefault();
+            if (!isAdminLoggedIn) return openLoginModal();
+
+            const editingId = document.getElementById('note-editing-id').value;
+            const title = document.getElementById('note-title').value.trim();
+            const subject = document.getElementById('note-subject').value.trim();
+            const format = document.getElementById('note-format').value;
+            const url = document.getElementById('note-url').value.trim();
+            const desc = document.getElementById('note-desc').value.trim();
+
+            if (!editingId && notes.length >= MAX_NOTES) {
+                showToast(`Maximum ${MAX_NOTES} notes allowed. Delete some first.`, 'info');
+                return;
+            }
+
+            if (editingId) {
+                const index = notes.findIndex(n => n.id === editingId);
+                if (index !== -1) {
+                    notes[index] = { ...notes[index], title, subject, format, url, desc };
+                    showToast('Study note updated successfully!', 'success');
+                }
+            } else {
+                const newNote = {
+                    id: 'note-' + Date.now(),
+                    title,
+                    subject,
+                    format,
+                    url,
+                    desc,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                notes.push(newNote);
+                showToast('Study note published!', 'success');
+            }
+
+            saveData();
+            resetNoteForm();
+            switchTab('notes');
+        }
+
+        function editNote(id) {
+            if (!isAdminLoggedIn) return openLoginModal();
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+
+            switchTab('admin');
+            switchAdminTab('note');
+
+            document.getElementById('note-editing-id').value = note.id;
+            document.getElementById('note-title').value = note.title;
+            document.getElementById('note-subject').value = note.subject;
+            document.getElementById('note-format').value = note.format || 'PDF';
+            document.getElementById('note-url').value = note.url;
+            document.getElementById('note-desc').value = note.desc || '';
+
+            document.getElementById('note-submit-btn').innerHTML = `<i class="fa-solid fa-floppy-disk mr-2"></i> Update Study Note`;
+            document.getElementById('note-cancel-btn').classList.remove('hidden');
+        }
+
+        function resetNoteForm() {
+            document.getElementById('form-upload-note').reset();
+            document.getElementById('note-editing-id').value = '';
+            document.getElementById('note-submit-btn').innerHTML = `<i class="fa-solid fa-file-arrow-up mr-2"></i> Publish Study Note`;
+            document.getElementById('note-cancel-btn').classList.add('hidden');
+        }
+
+        // Delete handlers
+        function deleteVideo(id) {
+            if (!isAdminLoggedIn) return openLoginModal();
+            videos = videos.filter(v => v.id !== id);
+            saveData();
+            renderLectures();
+            renderHome();
+            showToast('Video lecture removed.', 'info');
+        }
+
+        function deleteNote(id) {
+            if (!isAdminLoggedIn) return openLoginModal();
+            notes = notes.filter(n => n.id !== id);
+            saveData();
+            renderNotes();
+            renderHome();
+            showToast('Study note removed.', 'info');
+        }
+
+        // Populate subject dropdown options
+        function populateSubjectDropdowns() {
+            const allSubjects = new Set([
+                ...videos.map(v => v.subject),
+                ...notes.map(n => n.subject)
+            ]);
+
+            const videoSelect = document.getElementById('lecture-subject-filter');
+            const noteSelect = document.getElementById('notes-subject-filter');
+
+            const currentVidSub = videoSelect.value;
+            const currentNoteSub = noteSelect.value;
+
+            let optionsHtml = '<option value="ALL">All Subjects</option>';
+            allSubjects.forEach(sub => {
+                if (sub) optionsHtml += `<option value="${sub}">${sub}</option>`;
+            });
+
+            videoSelect.innerHTML = optionsHtml;
+            noteSelect.innerHTML = optionsHtml;
+
+            videoSelect.value = currentVidSub;
+            noteSelect.value = currentNoteSub;
+        }
+
+        // Update Counter Statistics
+        function updateStats() {
+            document.getElementById('stat-videos-count').textContent = videos.length;
+            document.getElementById('stat-notes-count').textContent = notes.length;
+            
+            const uniqueSubjects = new Set([
+                ...videos.map(v => v.subject),
+                ...notes.map(n => n.subject)
+            ]);
+            document.getElementById('stat-subjects-count').textContent = uniqueSubjects.size;
+        }
+
+        // Fallback helper to copy note links to clipboard safely
+        function copyToClipboardFallback(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-slate-900 text-white' : 'bg-slate-800 text-white';
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-info text-blue-400';
+
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl shadow-xl text-sm transition-all duration-300 transform translate-y-2 opacity-0 ${bgColor}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}"></i>
+                <span class="font-medium">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // App Initialization
+        window.onload = function() {
+            updateAuthUI();
+            saveData();
+            renderHome();
+        };
+    </script>
+</body>
+</html>
